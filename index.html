@@ -1,1 +1,177 @@
-d
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Texture Pack Generator</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='style.css'>
+    <script src='main.js'></script>
+</head>
+<body>
+
+    <br>
+    <br>
+    
+    <div class="top">
+        <p>Enter User Name:</p>
+        <input type="text" name="user" id="user" selected="selected">
+        <br>
+        <br>
+        <p>Enter Repo Name:</p>
+        <select name="" id="repos" onchange="myNewFunction(this);"></select>
+        <br>
+        <br>
+        <p>Enter Branch Name:</p>
+        <select name="" id="brach"></select>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <input type="button" value="Submit" onclick="clicked();">
+        <br>
+        <br>
+        <br>
+        
+    </div>
+<script type="text/javascript">
+    var reponame = "";
+    $("#user").keyup(function(event) {
+    if (event.keyCode === 13) {
+        var user = document.getElementById("user").value;
+        console.log(user);
+            
+                console.log("clear for takeoff !")
+                var select = document.getElementById("repos");
+                var length = select.options.length;
+                for (i = length-1; i >= 0; i--) {
+                select.options[i] = null;
+                }
+                var select = document.getElementById("brach");
+    
+                var length = select.options.length;
+                for (i = length-1; i >= 0; i--) {
+                select.options[i] = null;
+                }
+            
+            $.ajax({
+                url:`https://api.github.com/users/${user}/repos`,
+                dataType: 'json',
+                type: 'get',
+                statusCode: {
+                    200: function(data){
+                        if(data != '[]'){
+                            for(i in data){
+                                var ddl = document.getElementById("repos");
+                                var option = document.createElement("OPTION");
+                                var data1 = data[i]
+                                console.log(data1.name);
+                                reponame = data1.name;
+                                option.innerHTML = data1.name;
+                                option.value = i;
+                                ddl.options.add(option);
+                        
+                            }
+                        }
+                    }
+                },
+            });
+    }
+});
+
+    var user = document.getElementById("user").value;
+        console.log(user);
+            
+                console.log("clear for takeoff !")
+                var select = document.getElementById("repos");
+                var length = select.options.length;
+                for (i = length-1; i >= 0; i--) {
+                select.options[i] = null;
+                }
+                var select = document.getElementById("brach");
+    
+                var length = select.options.length;
+                for (i = length-1; i >= 0; i--) {
+                select.options[i] = null;
+                }
+            
+            $.ajax({
+                url:`https://api.github.com/users/${user}/repos`,
+                dataType: 'json',
+                type: 'get',
+                statusCode: {
+                    200: function(data){
+                        if(data != '[]'){
+                            for(i in data){
+                                var ddl = document.getElementById("repos");
+                                var option = document.createElement("OPTION");
+                                var data1 = data[i]
+                                console.log(data1.name);
+                                reponame = data1.name;
+                                option.innerHTML = data1.name;
+                                option.value = i;
+                                ddl.options.add(option);
+                        
+                            }
+                        }
+                    }
+                },
+            });
+        
+        
+
+var branchname = ""
+function myNewFunction(sel) {
+
+    var select = document.getElementById("brach");
+    
+                var length = select.options.length;
+                for (i = length-1; i >= 0; i--) {
+                select.options[i] = null;
+                }
+  repo = sel.options[sel.selectedIndex].text;  
+   user = document.getElementById("user").value;
+    $.ajax({
+        url:`https://api.github.com/repos/${user}/${repo}/branches`,
+        dataType: 'json',
+        type: 'get',
+        statusCode: {
+            200: function(data){
+                if(data != '[]'){
+                    for(i in data){
+                        var ddl = document.getElementById("brach");
+                        var option = document.createElement("OPTION");
+                        var data1 = data[i]
+                        branchname = data1.name;
+                        console.log(branchname);
+                        option.innerHTML = data1.name;
+                        option.value = i;
+                        ddl.options.add(option);
+                    }
+                }
+            }
+        },
+    });
+}
+   
+function clicked(){
+user = document.getElementById("user").value;
+       
+
+console.log("https://api.github.com/repos/"+user+"/"+reponame+"/git/trees/"+branchname+"?recursive=1")
+$.getJSON("https://api.github.com/repos/"+user+"/"+repo+"/git/trees/"+branchname+"?recursive=1", function( data ) {
+    console.log(data);
+    for (i in data.tree) {
+            x = data.tree[i];
+            y = x.path
+           console.log(y);
+    }
+});
+}
+    
+</script>
+</body>
+</html>
